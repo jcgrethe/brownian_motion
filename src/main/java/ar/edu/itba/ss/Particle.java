@@ -27,6 +27,13 @@ public class Particle {
         this.vAngle = Math.atan(vY/vX);
     }
 
+    public void updateMotion(Double vX, Double vY){
+        this.vX = vX;
+        this.vY = vY;
+        this.vModule = Math.hypot(vX, vY);
+        this.vAngle = Math.atan(vY/vX);
+    }
+
     public Long getId() {
         return id;
     }

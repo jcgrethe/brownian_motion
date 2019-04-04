@@ -1,6 +1,8 @@
 package ar.edu.itba.ss;
 
 import ar.edu.itba.ss.collisions.Collision;
+import ar.edu.itba.ss.collisions.ParticleCollision;
+import ar.edu.itba.ss.collisions.WallCollision;
 import ar.edu.itba.ss.io.Input;
 
 import java.util.Comparator;
@@ -27,13 +29,24 @@ public final class BrownianMotion {
         //Save Tc state
         //Determine new velocities
         while(currentTime < input.getTime()){
-
-
+            Collision nextCollision = getNextCollision(input.getParticles());
+            if (nextCollision instanceof ParticleCollision){
+                collide((ParticleCollision) nextCollision);
+            }else if (nextCollision instanceof WallCollision){
+                collide((WallCollision) nextCollision);
+            }
         }
 
     }
 
-    public Double getNextCollisionTime(List<Particle> particles){
+    private static void collide(ParticleCollision particleCollision){
+
+    }
+    private static void collide(WallCollision particleCollision){
+
+    }
+
+    private static Collision getNextCollision(List<Particle> particles){
         TreeSet<Collision> collisions = new TreeSet<Collision>(new Comparator<Collision>() {
             @Override
             public int compare(Collision o1, Collision o2) {
@@ -44,6 +57,6 @@ public final class BrownianMotion {
         for (Particle particle : particles){
             //Simulate and add to set.
         }
-        return collisions.first().getTime();
+        return collisions.first();
     }
 }
