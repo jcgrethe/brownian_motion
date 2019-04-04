@@ -12,6 +12,7 @@ public class Input {
     private List<Particle> particles;
     private static final Double systemSideLength = 0.5;
     private static final Double maxVelocityModule = 0.1;
+    private static final Double time = 10.0;
 
 
     // Defined values
@@ -116,5 +117,9 @@ public class Input {
 
     public static Double getMaxVelocityModule() {
         return maxVelocityModule;
+    }
+
+    public static Double getTime() {
+        return time;
     }
 }
