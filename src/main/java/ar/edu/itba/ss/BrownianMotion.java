@@ -1,5 +1,12 @@
 package ar.edu.itba.ss;
 
+import ar.edu.itba.ss.collisions.Collision;
+import ar.edu.itba.ss.io.Input;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.TreeSet;
+
 /**
  * Hello world!
  */
@@ -24,5 +31,19 @@ public final class BrownianMotion {
 
         }
 
+    }
+
+    public Double getNextCollisionTime(List<Particle> particles){
+        TreeSet<Collision> collisions = new TreeSet<Collision>(new Comparator<Collision>() {
+            @Override
+            public int compare(Collision o1, Collision o2) {
+                return (int) Math.ceil(o1.getTime() - o2.getTime());
+            }
+        });
+
+        for (Particle particle : particles){
+            //Simulate and add to set.
+        }
+        return collisions.first().getTime();
     }
 }

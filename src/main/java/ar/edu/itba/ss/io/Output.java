@@ -1,4 +1,5 @@
-package ar.edu.itba.ss;
+package ar.edu.itba.ss.io;
+import ar.edu.itba.ss.Particle;
 import sun.security.krb5.internal.PAData;
 
 import java.io.BufferedWriter;

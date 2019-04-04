@@ -1,6 +1,6 @@
-package ar.edu.itba.ss;
-import java.io.BufferedReader;
-import java.io.FileReader;
+package ar.edu.itba.ss.io;
+import ar.edu.itba.ss.Particle;
+
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -13,6 +13,10 @@ public class Input {
     private static final Double systemSideLength = 0.5;
     private static final Double maxVelocityModule = 0.1;
     private static final Double time = 10.0;
+    private static final Double smallParticleRadio = 10.0;
+    private static final Double bigParticleRadio = 0.005;
+    private static final Double smallParticleMass = 0.1;
+    private static final Double bigParticleMass = 100.0;
 
 
     // Defined values
@@ -41,24 +45,42 @@ public class Input {
                 systemSideLength/2,
                 0,
                 0,
-                0.05,
-                100
+                    bigParticleRadio,
+                    bigParticleMass
+
         ));
 
 //      Setting the small particles with random position and velocity (respecting max module)
         for (int p = 0 ; p < smallParticlesQuantity ; p++ ){
-            Double vX = random.nextDouble() * (double) maxVelocityModule;
-            Double vY = random.nextDouble() * (maxVelocityModule*maxVelocityModule - vX*vX);
+            Double x,y,vX,vY;
+            do{
+                x = random.nextDouble() * systemSideLength;
+                y = random.nextDouble() * systemSideLength;
+                vX = random.nextDouble() * maxVelocityModule;
+                vY = random.nextDouble() * (maxVelocityModule*maxVelocityModule - vX*vX);
+            }while(noOverlapParticle(x,y));
             this.particles.add(new Particle(
-                    random.nextDouble() * systemSideLength,
-                    random.nextDouble() * systemSideLength,
+                    x,
+                    y,
                     vX,
                     vY,
-                    0.005,
-                    0.1
+                    smallParticleRadio,
+                    smallParticleMass
             ));
         }
         System.out.println("Done.]");
+    }
+
+    private boolean noOverlapParticle(Double x, Double y){
+        for (Particle particle : particles){
+            if (Math.hypot(
+                    Math.abs(x - particle.getX()),
+                    Math.abs(y - particle.getY())
+                ) - particle.getMass() - smallParticleMass <= 0){
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
