@@ -1,13 +1,10 @@
 package ar.edu.itba.ss.io;
-import ar.edu.itba.ss.Particle;
-import sun.security.krb5.internal.PAData;
+import ar.edu.itba.ss.models.Particle;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class Output {
     private final static String FILENAME = "output.txt";

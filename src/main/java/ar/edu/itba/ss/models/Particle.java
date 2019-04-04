@@ -1,4 +1,4 @@
-package ar.edu.itba.ss;
+package ar.edu.itba.ss.models;
 
 public class Particle {
     private static Long serial_id = Long.valueOf(0);

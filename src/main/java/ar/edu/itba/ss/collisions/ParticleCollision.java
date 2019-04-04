@@ -1,6 +1,6 @@
 package ar.edu.itba.ss.collisions;
 
-import ar.edu.itba.ss.Particle;
+import ar.edu.itba.ss.models.Particle;
 
 public class ParticleCollision extends Collision {
     private final Particle first;
