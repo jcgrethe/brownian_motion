@@ -7,19 +7,21 @@ import ar.edu.itba.ss.io.Input;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.TreeSet;
 
-/**
- * Hello world!
- */
 public final class BrownianMotion {
     private BrownianMotion() {
     }
 
-    /**
-     * Says hello to the world.
-     * @param args The arguments of the program.
-     */
+    private static double EPSILON = 0.001;
+
+    private PriorityQueue<Collision> collisionPriorityQueue;
+    private List<Particle> particles;
+    private double size;
+    private double time;
+    private double dt;
+
     public static void main(String[] args) {
         Input input = new Input(Long.valueOf(100));
         Double currentTime = 0.0;
@@ -55,7 +57,7 @@ public final class BrownianMotion {
         });
 
         for (Particle particle : particles){
-            //Simulate and add to set.
+
         }
         return collisions.first();
     }
