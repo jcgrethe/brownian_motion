@@ -4,6 +4,7 @@ import ar.edu.itba.ss.collisions.Collision;
 import ar.edu.itba.ss.collisions.ParticleCollision;
 import ar.edu.itba.ss.collisions.WallCollision;
 import ar.edu.itba.ss.io.Input;
+import ar.edu.itba.ss.models.Particle;
 
 import java.util.Comparator;
 import java.util.List;
@@ -44,8 +45,18 @@ public final class BrownianMotion {
     private static void collide(ParticleCollision particleCollision){
 
     }
-    private static void collide(WallCollision particleCollision){
-
+    private static void collide(WallCollision wallCollision){
+        switch (wallCollision.getWall().getTypeOfWall()){
+            case TOP:
+            case BOTTOM:
+                wallCollision.getParticle().updateMotion(wallCollision.getParticle().getvX(), -wallCollision.getParticle().getvY());
+                break;
+            case LEFT:
+            case RIGHT:
+                wallCollision.getParticle().updateMotion(-wallCollision.getParticle().getvX(), wallCollision.getParticle().getvY());
+                break;
+            default: throw new IllegalStateException(); //This should not happen.
+        }
     }
 
     private static Collision getNextCollision(List<Particle> particles){

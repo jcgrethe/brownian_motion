@@ -1,5 +1,5 @@
 package ar.edu.itba.ss.io;
-import ar.edu.itba.ss.Particle;
+import ar.edu.itba.ss.models.Particle;
 
 import java.io.IOException;
 import java.util.*;
