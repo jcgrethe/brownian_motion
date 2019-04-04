@@ -31,6 +31,7 @@ public final class BrownianMotion {
         //Determine new velocities
         while(currentTime < input.getTime()){
             Collision nextCollision = getNextCollision(input.getParticles());
+            evolveParticlesUntilCollision(input.getParticles(), nextCollision);
             if (nextCollision instanceof ParticleCollision){
                 collide((ParticleCollision) nextCollision);
             }else if (nextCollision instanceof WallCollision){
@@ -40,7 +41,30 @@ public final class BrownianMotion {
 
     }
 
+    private static void evolveParticlesUntilCollision(List<Particle> particles, Collision collision){
+        particles.stream().parallel().forEach(particle -> particle.evolve(collision.getTime()));
+    }
+
     private static void collide(ParticleCollision particleCollision){
+        // Different Mass - Elastic Collision
+
+        Particle first = particleCollision.getFirst();
+        Particle second = particleCollision.getSecond();
+
+        Double sigma = first.getRadius() + second.getRadius(); //TODO: Re-Check if sigma is R1 + R2
+        Double J = (2*first.getMass()*second.getMass()*Math.abs(first.getvModule()-second.getvModule()*
+                Math.abs(first.getRadius() - second.getRadius())))/
+                ( sigma*(first.getMass() + second.getMass()));
+        Double Jx = J*Math.abs(first.getX()-second.getX())/sigma;
+        Double Jy = J*Math.abs(first.getY()-second.getY())/sigma;
+        first.updateMotion(
+                first.getvX() + Jx/first.getMass(),
+                first.getvY() + Jy/first.getMass()
+        );
+        second.updateMotion(
+                second.getvX() + Jx/second.getMass(),
+                second.getvY() + Jy/second.getMass()
+        );
 
     }
     private static void collide(WallCollision wallCollision){
