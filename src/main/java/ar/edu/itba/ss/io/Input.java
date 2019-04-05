@@ -2,6 +2,7 @@ package ar.edu.itba.ss.io;
 import ar.edu.itba.ss.models.Particle;
 
 import java.io.IOException;
+import java.nio.DoubleBuffer;
 import java.util.*;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class Input {
     private List<Particle> particles;
     private static final Double systemSideLength = 0.5;
     private static final Double maxVelocityModule = 0.1;
-    private static final long time = 10000;
+    private static final Double time = 10.0;
     private static final Double dt = 0.1;
     private static final Double smallParticleRadio = 0.005;
     private static final Double bigParticleRadio = 0.05;
@@ -142,7 +143,7 @@ public class Input {
         return maxVelocityModule;
     }
 
-    public static long getTime() {
+    public static Double getTime() {
         return time;
     }
 

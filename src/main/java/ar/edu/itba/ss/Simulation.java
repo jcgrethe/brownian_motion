@@ -22,7 +22,8 @@ public class Simulation {
     private double time;
     private double dt;
     private Input input;
-    public static long startTime = System.currentTimeMillis();
+    public static Double startTime = (double)(System.currentTimeMillis()/1000);
+    public static Double simulationCurrentTime = 0.0;
     private TreeSet<Collision> collisions;
 
     public Simulation(double size, double time, double dt, Input input) {
@@ -45,15 +46,15 @@ public class Simulation {
         //Save Tc state
         //Determine new velocities
         getCollisions(input.getParticles());
-        Double lastCollisionTime = 0.0;
-        while(!collisions.isEmpty() || input.getTime() < System.currentTimeMillis() - Simulation.startTime){
+        while(!collisions.isEmpty() || input.getTime() < startTime - (double)(System.currentTimeMillis()/1000)){
             Collision nextCollision = collisions.pollFirst();
-            evolveParticles(input.getParticles(), nextCollision.getTime() - lastCollisionTime);
+            evolveParticles(input.getParticles(), nextCollision.getTime() - simulationCurrentTime);
             if (nextCollision instanceof ParticleCollision){
                 collide((ParticleCollision) nextCollision);
             }else if (nextCollision instanceof WallCollision){
                 collide((WallCollision) nextCollision);
             }
+            simulationCurrentTime = nextCollision.getTime();
             updateCollisions(nextCollision);
             try{
                 Output.printToFile(input.getParticles());
@@ -61,7 +62,6 @@ public class Simulation {
             }catch (IOException e){
                 System.out.println(e);
             }
-            lastCollisionTime = nextCollision.getTime();
         }
     }
 

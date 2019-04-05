@@ -32,10 +32,10 @@ public class CollisionValidator {
         }
 
         if(timeX < timeY){
-            return new WallCollision(timeX + Simulation.startTime, particle, ((particle.getvX()>0) ? new Wall(Wall.typeOfWall.RIGHT) : new Wall(Wall.typeOfWall.LEFT)));
+            return new WallCollision(timeX + Simulation.simulationCurrentTime, particle, ((particle.getvX()>0) ? new Wall(Wall.typeOfWall.RIGHT) : new Wall(Wall.typeOfWall.LEFT)));
         }
 
-        return new WallCollision(timeY + Simulation.startTime, particle, ((particle.getvY()>0) ? new Wall(Wall.typeOfWall.BOTTOM) : new Wall(Wall.typeOfWall.TOP)));
+        return new WallCollision(timeY  + Simulation.simulationCurrentTime, particle, ((particle.getvY()>0) ? new Wall(Wall.typeOfWall.BOTTOM) : new Wall(Wall.typeOfWall.TOP)));
 
     }
 
@@ -61,7 +61,7 @@ public class CollisionValidator {
             return null;
         time = -(dVdR + Math.sqrt(d)) / dV2;
         if(time > 0)
-            return new ParticleCollision(time + Simulation.startTime, p1, p2);
+            return new ParticleCollision(time  + Simulation.simulationCurrentTime, p1, p2);
         return null;
     }
 
