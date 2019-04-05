@@ -56,4 +56,21 @@ public class CollisionValidator {
             return new ParticleCollision(time, p1, p2);
         return null;
     }
+
+    public static Boolean hasCommonParticles(Collision one, Collision another){
+        if (one instanceof ParticleCollision && another instanceof ParticleCollision)
+            return (((ParticleCollision) one).getFirst() == ((ParticleCollision) another).getFirst()
+                    || ((ParticleCollision) one).getFirst() == ((ParticleCollision) another).getSecond()
+                    || ((ParticleCollision) one).getSecond() == ((ParticleCollision) another).getFirst()
+                    || ((ParticleCollision) one).getSecond() == ((ParticleCollision) another).getSecond());
+        if (one instanceof WallCollision && another instanceof ParticleCollision)
+            return ((WallCollision) one).getParticle() == ((ParticleCollision) another).getFirst() ||
+                    ((WallCollision) one).getParticle() == ((ParticleCollision) another).getSecond();
+        if (one instanceof ParticleCollision && another instanceof WallCollision)
+            return ((WallCollision) another).getParticle() == ((ParticleCollision) one).getFirst() ||
+                    ((WallCollision) another).getParticle() == ((ParticleCollision) one).getSecond();
+        if (one instanceof WallCollision && another instanceof  WallCollision)
+            return ((WallCollision) another).getParticle() == ((WallCollision) another).getParticle();
+        return false;
+    }
 }

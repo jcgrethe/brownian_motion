@@ -7,11 +7,10 @@ import ar.edu.itba.ss.collisions.WallCollision;
 import ar.edu.itba.ss.io.Input;
 import ar.edu.itba.ss.io.Output;
 import ar.edu.itba.ss.models.Particle;
+import ar.edu.itba.ss.models.Wall;
 
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Simulation {
 
@@ -22,6 +21,7 @@ public class Simulation {
     private double time;
     private double dt;
     private Input input;
+    TreeSet<Collision> collisions;
 
     public Simulation(List<Particle> particles, double size, double time, double dt, Input input) {
         this.particles = particles;
@@ -29,6 +29,7 @@ public class Simulation {
         this.time = time;
         this.dt = dt;
         this.input = input;
+        this.collisions = new TreeSet<Collision>();
     }
 
 
@@ -37,24 +38,21 @@ public class Simulation {
         //Evolve particles to Tc
         //Save Tc state
         //Determine new velocities
-        Collision nextCollision = getNextCollision(input.getParticles());
-        for (double currentTime = 0.0 ; currentTime < input.getTime() ; currentTime+=input.getDT()){
-            //esto tiene que ser un while porque puede haber mas de una colision en un dt
-            if (nextCollision != null && nextCollision.getTime() < currentTime + input.getDT()){
-                //Collision next to happen in this dt
-                if (nextCollision instanceof ParticleCollision){
-                    collide((ParticleCollision) nextCollision);
-                }else if (nextCollision instanceof WallCollision){
-                    collide((WallCollision) nextCollision);
-                }
-                nextCollision = getNextCollision(input.getParticles());
+        TreeSet<Collision> collisions = getCollisions(this.particles);
+        while(!collisions.isEmpty()){
+            Collision nextCollision = collisions.pollFirst();
+            if (nextCollision instanceof ParticleCollision){
+                collide((ParticleCollision) nextCollision);
+            }else if (nextCollision instanceof WallCollision){
+                collide((WallCollision) nextCollision);
             }
+            evolveParticles(input.getParticles(), nextCollision.getTime());
+            updateCollisions(nextCollision);
             try{
                 Output.printToFile(input.getParticles());
             }catch (IOException e){
                 System.out.println(e);
             }
-            evolveParticles(input.getParticles(), input.getDT());
         }
     }
 
@@ -98,9 +96,7 @@ public class Simulation {
         }
     }
 
-    private Collision getNextCollision(List<Particle> particles){
-        TreeSet<Collision> collisions = new TreeSet<>();
-
+    private TreeSet<Collision> getCollisions(List<Particle> particles){
         particles.stream().parallel().forEach(
                 particle -> {
             Collision aux = CollisionValidator.wallCollision(particle,this.size);
@@ -119,8 +115,18 @@ public class Simulation {
                     );
                 }
         );
-        return collisions.first();
+        return collisions;
     }
 
+    private void updateCollisions(Collision currentCollision){
+        List<Particle> currentCollisionParticles = new LinkedList<>();
+        if (currentCollision instanceof ParticleCollision){
+            currentCollisionParticles.add(((ParticleCollision) currentCollision).getFirst());
+            currentCollisionParticles.add(((ParticleCollision) currentCollision).getSecond());
+        }else if(currentCollision instanceof WallCollision)
+            currentCollisionParticles.add(((WallCollision) currentCollision).getParticle());
+        collisions.stream().parallel().filter(collision -> !CollisionValidator.hasCommonParticles(currentCollision, collision));
+        getCollisions(particles);
+    }
 
 }
