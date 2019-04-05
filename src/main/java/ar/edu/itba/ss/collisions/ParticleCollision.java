@@ -34,4 +34,9 @@ public class ParticleCollision extends Collision {
         }
         return false;
     }
+
+    @Override
+    public int compareTo(Collision o) {
+        return (int) Math.ceil(this.getTime() - o.getTime());
+    }
 }

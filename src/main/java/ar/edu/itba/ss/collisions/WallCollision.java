@@ -21,4 +21,8 @@ public class WallCollision extends Collision {
         return wall;
     }
 
+    @Override
+    public int compareTo(Collision o) {
+        return (int) Math.ceil(this.getTime() - o.getTime());
+    }
 }

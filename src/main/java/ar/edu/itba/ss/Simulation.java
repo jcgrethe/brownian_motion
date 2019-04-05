@@ -99,12 +99,7 @@ public class Simulation {
     }
 
     private Collision getNextCollision(List<Particle> particles){
-        TreeSet<Collision> collisions = new TreeSet<Collision>(new Comparator<Collision>() {
-            @Override
-            public int compare(Collision o1, Collision o2) {
-                return (int) Math.ceil(o1.getTime() - o2.getTime());
-            }
-        });
+        TreeSet<Collision> collisions = new TreeSet<>();
 
         particles.stream().parallel().forEach(
                 particle -> {
