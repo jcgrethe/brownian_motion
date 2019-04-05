@@ -32,9 +32,10 @@ public class Output {
                 System.out.println(e);
             }
         });
+        simulationBufferedWriter.flush();
     }
 
-    public static void generateXYZFile(List<Particle> particles){
+    public static void generateXYZFile(){
         try{
             FileWriter fileWriter = new FileWriter(SIMULATION_FILENAME);
             simulationBufferedWriter = new BufferedWriter(fileWriter);

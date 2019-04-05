@@ -15,16 +15,13 @@ import java.util.*;
 public class Simulation {
 
     private static double EPSILON = 0.001;
-
-    private List<Particle> particles;
     private double size;
     private double time;
     private double dt;
     private Input input;
     TreeSet<Collision> collisions;
 
-    public Simulation(List<Particle> particles, double size, double time, double dt, Input input) {
-        this.particles = particles;
+    public Simulation(double size, double time, double dt, Input input) {
         this.size = size;
         this.time = time;
         this.dt = dt;
@@ -38,8 +35,9 @@ public class Simulation {
         //Evolve particles to Tc
         //Save Tc state
         //Determine new velocities
-        TreeSet<Collision> collisions = getCollisions(this.particles);
-        while(!collisions.isEmpty()){
+        getCollisions(input.getParticles());
+        long start = System.currentTimeMillis();
+        while(!collisions.isEmpty() || input.getTime() < System.currentTimeMillis() - start){
             Collision nextCollision = collisions.pollFirst();
             if (nextCollision instanceof ParticleCollision){
                 collide((ParticleCollision) nextCollision);
@@ -50,6 +48,7 @@ public class Simulation {
             updateCollisions(nextCollision);
             try{
                 Output.printToFile(input.getParticles());
+                System.out.println(nextCollision.getTime());
             }catch (IOException e){
                 System.out.println(e);
             }
@@ -96,7 +95,7 @@ public class Simulation {
         }
     }
 
-    private TreeSet<Collision> getCollisions(List<Particle> particles){
+    private void getCollisions(List<Particle> particles){
         particles.stream().parallel().forEach(
                 particle -> {
             Collision aux = CollisionValidator.wallCollision(particle,this.size);
@@ -115,7 +114,6 @@ public class Simulation {
                     );
                 }
         );
-        return collisions;
     }
 
     private void updateCollisions(Collision currentCollision){
@@ -126,7 +124,7 @@ public class Simulation {
         }else if(currentCollision instanceof WallCollision)
             currentCollisionParticles.add(((WallCollision) currentCollision).getParticle());
         collisions.stream().parallel().filter(collision -> !CollisionValidator.hasCommonParticles(currentCollision, collision));
-        getCollisions(particles);
+        getCollisions(currentCollisionParticles);
     }
 
 }

@@ -22,7 +22,8 @@ public final class BrownianMotion {
 
     public static void main(String[] args) {
         Input input = new Input(Long.valueOf(100));
-        Simulation simulation = new Simulation(input.getParticles(), 10, 10, 0.1, input);
+        Output.generateXYZFile();
+        Simulation simulation = new Simulation(10, 10, 0.1, input);
         simulation.start();
     }
 
