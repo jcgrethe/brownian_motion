@@ -8,32 +8,36 @@ import java.util.List;
 
 public class Output {
     private final static String FILENAME = "output.txt";
-    private final static String FILENAME2 = "positions.xyz";
-    private final static String STATIC_FILE = "sample_input_static.txt";
-    private final static String DINAMIC_FILE = "sample_input_dinamic.txt";
+    private final static String SIMULATION_FILENAME = "positions.xyz";
+    private final static String STATIC_FILENAME = "sample_input_static.txt";
+    private final static String DINAMIC_FILENAME = "sample_input_dinamic.txt";
+    private static BufferedWriter simulationBufferedWriter;
 
-    public static void printToFile(BufferedWriter bufferedWriter, Particle particle) throws IOException {
-        bufferedWriter.newLine();
-        String print = particle.getId()
-                + " " + particle.getX()
-                + " " + particle.getY()
-                + " " + particle.getvX()
-                + " " + particle.getvY()
-                + " " + particle.getRadius()
-                + " " + particle.getMass();
-        bufferedWriter.write(print);
+
+    public static void printToFile(List<Particle> particles) throws IOException {
+        simulationBufferedWriter.write(particles.size());
+        simulationBufferedWriter.newLine();
+        simulationBufferedWriter.newLine();
+        particles.stream().parallel().forEach(particle -> {
+            try{
+                simulationBufferedWriter.write(particle.getId()
+                        + " " + particle.getX()
+                        + " " + particle.getY()
+                        + " " + particle.getvX()
+                        + " " + particle.getvY()
+                        + " " + particle.getRadius()
+                        + " " + particle.getMass());
+                simulationBufferedWriter.newLine();
+            }catch (IOException e){
+                System.out.println(e);
+            }
+        });
     }
 
     public static void generateXYZFile(List<Particle> particles){
         try{
-            FileWriter fileWriter = new FileWriter(STATIC_FILE);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(String.valueOf(particles.size()));
-
-            // For each state
-            for (Particle particle : particles){
-                printToFile(bufferedWriter, particle);
-            }
+            FileWriter fileWriter = new FileWriter(SIMULATION_FILENAME);
+            simulationBufferedWriter = new BufferedWriter(fileWriter);
         }catch(IOException e){
             System.out.println(e);
         }
@@ -41,7 +45,7 @@ public class Output {
 
     public static void generateInputFiles(Long totalParticlesQuantity, int sideLength, List<Particle> particles){
         try{
-            FileWriter fileWriter = new FileWriter(STATIC_FILE);
+            FileWriter fileWriter = new FileWriter(STATIC_FILENAME);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(String.valueOf(totalParticlesQuantity));
             bufferedWriter.newLine();
@@ -61,7 +65,7 @@ public class Output {
         }
 
         try{
-            FileWriter fileWriter = new FileWriter(DINAMIC_FILE);
+            FileWriter fileWriter = new FileWriter(DINAMIC_FILENAME);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 //            for (int i = 0 ; i < particles.get(0).getStates().size() ; i++){
                 bufferedWriter.write(String.valueOf(0));

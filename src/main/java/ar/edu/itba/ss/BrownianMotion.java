@@ -4,8 +4,10 @@ import ar.edu.itba.ss.collisions.Collision;
 import ar.edu.itba.ss.collisions.ParticleCollision;
 import ar.edu.itba.ss.collisions.WallCollision;
 import ar.edu.itba.ss.io.Input;
+import ar.edu.itba.ss.io.Output;
 import ar.edu.itba.ss.models.Particle;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
@@ -37,6 +39,11 @@ public final class BrownianMotion {
                     collide((WallCollision) nextCollision);
                 }
                 nextCollision = getNextCollision(input.getParticles());
+            }
+            try{
+                Output.printToFile(input.getParticles());
+            }catch (IOException e){
+                System.out.println(e);
             }
             evolveParticles(input.getParticles(), input.getDT());
         }
