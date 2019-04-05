@@ -14,8 +14,8 @@ public class Input {
     private static final Double maxVelocityModule = 0.1;
     private static final long time = 1000;
     private static final Double dt = 0.1;
-    private static final Double smallParticleRadio = 10.0;
-    private static final Double bigParticleRadio = 0.005;
+    private static final Double smallParticleRadio = 0.005;
+    private static final Double bigParticleRadio = 0.05;
     private static final Double smallParticleMass = 0.1;
     private static final Double bigParticleMass = 100.0;
 
@@ -57,8 +57,8 @@ public class Input {
             do{
                 x = random.nextDouble() * systemSideLength;
                 y = random.nextDouble() * systemSideLength;
-                vX = random.nextDouble() * maxVelocityModule;
-                vY = random.nextDouble() * (maxVelocityModule*maxVelocityModule - vX*vX);
+                vX = random.nextBoolean()?-1:1 * random.nextDouble() * maxVelocityModule;
+                vY = random.nextBoolean()?-1:1 * random.nextDouble() * (maxVelocityModule*maxVelocityModule - vX*vX);
             }while(noOverlapParticle(x,y));
             this.particles.add(new Particle(
                     x,

@@ -15,12 +15,13 @@ public class Output {
 
 
     public static void printToFile(List<Particle> particles) throws IOException {
-        simulationBufferedWriter.write(particles.size());
+        simulationBufferedWriter.write(String.valueOf(particles.size()));
         simulationBufferedWriter.newLine();
         simulationBufferedWriter.newLine();
-        particles.stream().parallel().forEach(particle -> {
+        particles.stream().forEach(particle -> {
             try{
-                simulationBufferedWriter.write(particle.getId()
+                simulationBufferedWriter.write(
+                        particle.getId()
                         + " " + particle.getX()
                         + " " + particle.getY()
                         + " " + particle.getvX()
