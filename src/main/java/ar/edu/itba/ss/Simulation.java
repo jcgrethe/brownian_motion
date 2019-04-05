@@ -22,7 +22,7 @@ public class Simulation {
     TreeSet<Collision> collisions;
 
     public Simulation(double size, double time, double dt, Input input) {
-        this.size = size;
+        this.size = Input.getSystemSideLength();
         this.time = time;
         this.dt = dt;
         this.input = input;
