@@ -13,15 +13,23 @@ public class CollisionValidator {
         if (particle.getvY()>0)
             timeY = ( size - particle.getY() - particle.getRadius() ) / particle.getvY();
         else if (particle.getvY() < 0)
-            timeY = ( 0 - particle.getY() - particle.getRadius() ) / particle.getvY();
+            timeY = ( 0 + particle.getY() - particle.getRadius() ) / Math.abs(particle.getvY());
 
         if (particle.getvX()>0)
             timeX = ( size - particle.getX() - particle.getRadius() ) / particle.getvX();
         else if (particle.getvY() < 0)
-            timeX = ( 0 - particle.getX() - particle.getRadius() ) / particle.getvX();
+            timeX = ( 0 + particle.getX() - particle.getRadius() ) / Math.abs(particle.getvX());
 
-        if (timeX.isInfinite() && timeY.isInfinite())
+        if(timeX < 0)
+            timeX = Double.POSITIVE_INFINITY;
+
+        if(timeY < 0)
+            timeY = Double.POSITIVE_INFINITY;
+
+        if (timeX.isInfinite() && timeY.isInfinite()) {
             return null;
+        }
+        System.out.println("not null");
 
         if(timeX < timeY){
             return new WallCollision(timeX, particle, ((particle.getvX()>0) ? new Wall(Wall.typeOfWall.RIGHT) : new Wall(Wall.typeOfWall.LEFT)));
