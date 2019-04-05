@@ -12,7 +12,7 @@ public class Input {
     private List<Particle> particles;
     private static final Double systemSideLength = 0.5;
     private static final Double maxVelocityModule = 0.1;
-    private static final long time = 1000;
+    private static final long time = 10000;
     private static final Double dt = 0.1;
     private static final Double smallParticleRadio = 0.005;
     private static final Double bigParticleRadio = 0.05;

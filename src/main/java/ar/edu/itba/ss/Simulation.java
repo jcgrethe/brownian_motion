@@ -11,6 +11,8 @@ import ar.edu.itba.ss.models.Wall;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 public class Simulation {
@@ -28,7 +30,12 @@ public class Simulation {
         this.time = time;
         this.dt = dt;
         this.input = input;
-        this.collisions = new TreeSet<>();
+        this.collisions = new TreeSet<>(new Comparator<Collision>() {
+            @Override
+            public int compare(Collision o1, Collision o2) {
+                return Double.compare(o1.getTime(), o2.getTime());
+            }
+        });
     }
 
 
@@ -59,7 +66,7 @@ public class Simulation {
     }
 
     private void evolveParticles(List<Particle> particles, Double time){
-        particles.stream().parallel().forEach(particle -> particle.evolve(time));
+        particles.stream().forEach(particle -> particle.evolve(time));
     }
 
     private void collide(ParticleCollision particleCollision){
@@ -99,16 +106,16 @@ public class Simulation {
     }
 
     private void getCollisions(List<Particle> particles){
-        particles.stream().parallel().forEach(
+        particles.stream().forEach(
                 particle -> {
             Collision aux = CollisionValidator.wallCollision(particle,this.size);
             if (aux!=null)
                 collisions.add(aux);
         });
 
-        particles.stream().parallel().forEach(
+        particles.stream().forEach(
                 particle -> {
-                    particles.stream().parallel().forEach(
+                    particles.stream().forEach(
                             particle1 -> {
                                 Collision aux = CollisionValidator.particleCollision(particle, particle1);
                                 if (aux!=null)
@@ -126,7 +133,13 @@ public class Simulation {
             currentCollisionParticles.add(((ParticleCollision) currentCollision).getSecond());
         }else if(currentCollision instanceof WallCollision)
             currentCollisionParticles.add(((WallCollision) currentCollision).getParticle());
-        collisions.stream().parallel().filter(collision -> !CollisionValidator.hasCommonParticles(currentCollision, collision));
+        Supplier<TreeSet<Collision>> supplier = () -> new TreeSet<>(new Comparator<Collision>() {
+            @Override
+            public int compare(Collision o1, Collision o2) {
+                return Double.compare(o1.getTime(), o2.getTime());
+            }
+        });
+        collisions = collisions.stream().filter(collision -> !CollisionValidator.hasCommonParticles(currentCollision, collision)).collect(Collectors.toCollection(supplier));
         getCollisions(currentCollisionParticles);
     }
 

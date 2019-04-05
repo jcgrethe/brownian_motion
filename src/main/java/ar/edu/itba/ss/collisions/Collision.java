@@ -1,6 +1,6 @@
 package ar.edu.itba.ss.collisions;
 
-public abstract class Collision implements Comparable<Collision> {
+public abstract class Collision {
     private final Double time;
 
     public Double getTime() {
@@ -11,8 +11,8 @@ public abstract class Collision implements Comparable<Collision> {
         this.time = time;
     }
 
-    @Override
-    public int compareTo(Collision o) {
-        return (int) Math.ceil(this.getTime() - o.getTime());
-    }
+//    @Override
+//    public int compareTo(Collision o) {
+//        return Double.compare(this.getTime(), o.getTime());
+//    }
 }
