@@ -1,6 +1,7 @@
 package ar.edu.itba.ss;
 
 import ar.edu.itba.ss.collisions.Collision;
+import ar.edu.itba.ss.collisions.CollisionValidator;
 import ar.edu.itba.ss.collisions.ParticleCollision;
 import ar.edu.itba.ss.collisions.WallCollision;
 import ar.edu.itba.ss.io.Input;
@@ -59,7 +60,7 @@ public final class BrownianMotion {
         }
     }
 
-    private static Collision getNextCollision(List<Particle> particles){
+    private Collision getNextCollision(List<Particle> particles){
         TreeSet<Collision> collisions = new TreeSet<Collision>(new Comparator<Collision>() {
             @Override
             public int compare(Collision o1, Collision o2) {
@@ -68,8 +69,22 @@ public final class BrownianMotion {
         });
 
         for (Particle particle : particles){
-
+            Collision aux = CollisionValidator.wallCollision(particle,this.size);
+            if (aux!=null)
+                collisionPriorityQueue.add(aux);
         }
+
+        particles.stream().parallel().forEach(
+                particle -> {
+                    particles.stream().parallel().forEach(
+                            particle1 -> {
+                                Collision aux = CollisionValidator.particleCollision(particle, particle1);
+                                if (aux!=null)
+                                    collisionPriorityQueue.add(aux);
+                            }
+                    );
+                }
+        );
         return collisions.first();
     }
 }

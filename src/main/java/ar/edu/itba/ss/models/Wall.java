@@ -5,6 +5,8 @@ public class Wall {
         TOP, BOTTOM, RIGHT, LEFT
     }
 
+
+
     private final typeOfWall typeOfWall;
 
     public Wall(typeOfWall type) {

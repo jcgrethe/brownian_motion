@@ -20,4 +20,5 @@ public class WallCollision extends Collision {
     public Wall getWall() {
         return wall;
     }
+
 }
