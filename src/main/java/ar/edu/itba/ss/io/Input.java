@@ -13,6 +13,7 @@ public class Input {
     private static final Double systemSideLength = 0.5;
     private static final Double maxVelocityModule = 0.1;
     private static final Double time = 10.0;
+    private static final Double dt = 0.1;
     private static final Double smallParticleRadio = 10.0;
     private static final Double bigParticleRadio = 0.005;
     private static final Double smallParticleMass = 0.1;
@@ -143,5 +144,9 @@ public class Input {
 
     public static Double getTime() {
         return time;
+    }
+
+    public static Double getDT() {
+        return dt;
     }
 }

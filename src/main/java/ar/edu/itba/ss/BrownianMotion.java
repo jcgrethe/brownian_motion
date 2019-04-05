@@ -23,26 +23,28 @@ public final class BrownianMotion {
      */
     public static void main(String[] args) {
         Input input = new Input(Long.valueOf(100));
-        Double currentTime = 0.0;
-
         //Calculate time (Tc) to next collision
         //Evolve particles to Tc
         //Save Tc state
         //Determine new velocities
-        while(currentTime < input.getTime()){
-            Collision nextCollision = getNextCollision(input.getParticles());
-            evolveParticlesUntilCollision(input.getParticles(), nextCollision);
-            if (nextCollision instanceof ParticleCollision){
-                collide((ParticleCollision) nextCollision);
-            }else if (nextCollision instanceof WallCollision){
-                collide((WallCollision) nextCollision);
+        Collision nextCollision = nextCollision = getNextCollision(input.getParticles());
+        for (double currentTime = 0.0 ; currentTime < input.getTime() ; currentTime+=input.getDT()){
+            if (nextCollision != null && nextCollision.getTime() < currentTime + input.getDT()){
+                //Collision next to happen in this dt
+                if (nextCollision instanceof ParticleCollision){
+                    collide((ParticleCollision) nextCollision);
+                }else if (nextCollision instanceof WallCollision){
+                    collide((WallCollision) nextCollision);
+                }
+                nextCollision = getNextCollision(input.getParticles());
             }
+            evolveParticles(input.getParticles(), input.getDT());
         }
 
     }
 
-    private static void evolveParticlesUntilCollision(List<Particle> particles, Collision collision){
-        particles.stream().parallel().forEach(particle -> particle.evolve(collision.getTime()));
+    private static void evolveParticles(List<Particle> particles, Double time){
+        particles.stream().parallel().forEach(particle -> particle.evolve(time));
     }
 
     private static void collide(ParticleCollision particleCollision){
