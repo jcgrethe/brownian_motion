@@ -106,11 +106,12 @@ public class Simulation {
             }
         });
 
-        for (Particle particle : particles){
+        particles.stream().parallel().forEach(
+                particle -> {
             Collision aux = CollisionValidator.wallCollision(particle,this.size);
             if (aux!=null)
                 collisions.add(aux);
-        }
+        });
 
         particles.stream().parallel().forEach(
                 particle -> {
