@@ -42,15 +42,15 @@ public class Input {
         this.particles = new ArrayList<>();
 
 //      Setting the big particle
-//        this.particles.add(new Particle(
-//                systemSideLength/2,
-//                systemSideLength/2,
-//                0,
-//                0,
-//                    bigParticleRadio,
-//                    bigParticleMass
-//
-//        ));
+        this.particles.add(new Particle(
+                systemSideLength/2,
+                systemSideLength/2,
+                0,
+                0,
+                    bigParticleRadio,
+                    bigParticleMass
+
+        ));
 
 //      Setting the small particles with random position and velocity (respecting max module)
         for (int p = 0 ; p < smallParticlesQuantity ; p++ ){
@@ -60,7 +60,7 @@ public class Input {
                 y = random.nextDouble() * systemSideLength;
                 vX = random.nextBoolean()?-1:1 * random.nextDouble() * maxVelocityModule;
                 vY = random.nextBoolean()?-1:1 * random.nextDouble() * (maxVelocityModule*maxVelocityModule - vX*vX);
-            }while(false);
+            }while(noOverlapParticle(x,y));
             this.particles.add(new Particle(
                     x,
                     y,
