@@ -29,7 +29,6 @@ public class CollisionValidator {
         if (timeX.isInfinite() && timeY.isInfinite()) {
             return null;
         }
-        System.out.println("not null");
 
         if(timeX < timeY){
             return new WallCollision(timeX, particle, ((particle.getvX()>0) ? new Wall(Wall.typeOfWall.RIGHT) : new Wall(Wall.typeOfWall.LEFT)));
