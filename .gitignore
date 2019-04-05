@@ -75,6 +75,8 @@ local.properties
 # Annotation Processing
 .apt_generated
 
+*.xyz
+
 .sts4-cache/
 
 ### Intellij ###
