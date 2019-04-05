@@ -11,14 +11,14 @@ public class CollisionValidator {
         Double timeY= Double.POSITIVE_INFINITY;
         Double timeX = Double.POSITIVE_INFINITY;
 
-        if (particle.getvY()>0)
-            timeY = ( particle.getY() - particle.getRadius() ) / particle.getvY();
+        if (particle.getvY() >0)
+            timeY = ( size - particle.getY() - particle.getRadius() ) / particle.getvY();
         else if (particle.getvY() < 0)
-            timeY = ( size - particle.getY() - particle.getRadius() ) / Math.abs(particle.getvY());
+            timeY = ( particle.getY() - particle.getRadius() ) / Math.abs(particle.getvY());
 
         if (particle.getvX()>0)
             timeX = ( size - particle.getX() - particle.getRadius() ) / particle.getvX();
-        else if (particle.getvY() < 0)
+        else if (particle.getvX() < 0)
             timeX = ( 0 + particle.getX() - particle.getRadius() ) / Math.abs(particle.getvX());
 
         if(timeX < 0)
