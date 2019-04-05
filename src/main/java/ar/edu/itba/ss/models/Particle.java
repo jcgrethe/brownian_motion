@@ -34,6 +34,11 @@ public class Particle {
         this.vAngle = Math.atan(vY/vX);
     }
 
+    public void evolve(Double time){
+        this.x += time * this.vX;
+        this.y += time * this.vY;
+    }
+
     public Long getId() {
         return id;
     }
