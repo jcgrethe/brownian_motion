@@ -11,6 +11,7 @@ import ar.edu.itba.ss.models.Wall;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.DoubleStream;
 
 public class Simulation {
 
@@ -19,14 +20,15 @@ public class Simulation {
     private double time;
     private double dt;
     private Input input;
-    TreeSet<Collision> collisions;
+    public static long startTime = System.currentTimeMillis();
+    private TreeSet<Collision> collisions;
 
     public Simulation(double size, double time, double dt, Input input) {
         this.size = Input.getSystemSideLength();
         this.time = time;
         this.dt = dt;
         this.input = input;
-        this.collisions = new TreeSet<Collision>();
+        this.collisions = new TreeSet<>();
     }
 
 
@@ -36,15 +38,15 @@ public class Simulation {
         //Save Tc state
         //Determine new velocities
         getCollisions(input.getParticles());
-        long start = System.currentTimeMillis();
-        while(!collisions.isEmpty() || input.getTime() < System.currentTimeMillis() - start){
+        Double lastCollisionTime = 0.0;
+        while(!collisions.isEmpty() || input.getTime() < System.currentTimeMillis() - Simulation.startTime){
             Collision nextCollision = collisions.pollFirst();
+            evolveParticles(input.getParticles(), nextCollision.getTime() - lastCollisionTime);
             if (nextCollision instanceof ParticleCollision){
                 collide((ParticleCollision) nextCollision);
             }else if (nextCollision instanceof WallCollision){
                 collide((WallCollision) nextCollision);
             }
-            evolveParticles(input.getParticles(), nextCollision.getTime());
             updateCollisions(nextCollision);
             try{
                 Output.printToFile(input.getParticles());
@@ -52,6 +54,7 @@ public class Simulation {
             }catch (IOException e){
                 System.out.println(e);
             }
+            lastCollisionTime = nextCollision.getTime();
         }
     }
 

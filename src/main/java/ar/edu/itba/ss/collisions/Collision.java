@@ -11,5 +11,8 @@ public abstract class Collision implements Comparable<Collision> {
         this.time = time;
     }
 
-
+    @Override
+    public int compareTo(Collision o) {
+        return (int) Math.ceil(this.getTime() - o.getTime());
+    }
 }

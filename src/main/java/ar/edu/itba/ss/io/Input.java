@@ -16,8 +16,8 @@ public class Input {
     private static final Double dt = 0.1;
     private static final Double smallParticleRadio = 0.005;
     private static final Double bigParticleRadio = 0.05;
-    private static final Double smallParticleMass = 0.1;
-    private static final Double bigParticleMass = 100.0;
+    private static final Double smallParticleMass = 0.0001;
+    private static final Double bigParticleMass = 0.1;
 
 
     // Defined values

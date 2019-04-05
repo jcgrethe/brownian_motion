@@ -1,5 +1,6 @@
 package ar.edu.itba.ss.collisions;
 
+import ar.edu.itba.ss.Simulation;
 import ar.edu.itba.ss.models.Particle;
 import ar.edu.itba.ss.models.Wall;
 
@@ -11,9 +12,9 @@ public class CollisionValidator {
         Double timeX = Double.POSITIVE_INFINITY;
 
         if (particle.getvY()>0)
-            timeY = ( size - particle.getY() - particle.getRadius() ) / particle.getvY();
+            timeY = ( particle.getY() - particle.getRadius() ) / particle.getvY();
         else if (particle.getvY() < 0)
-            timeY = ( 0 + particle.getY() - particle.getRadius() ) / Math.abs(particle.getvY());
+            timeY = ( size - particle.getY() - particle.getRadius() ) / Math.abs(particle.getvY());
 
         if (particle.getvX()>0)
             timeX = ( size - particle.getX() - particle.getRadius() ) / particle.getvX();
@@ -31,10 +32,10 @@ public class CollisionValidator {
         }
 
         if(timeX < timeY){
-            return new WallCollision(timeX, particle, ((particle.getvX()>0) ? new Wall(Wall.typeOfWall.RIGHT) : new Wall(Wall.typeOfWall.LEFT)));
+            return new WallCollision(timeX + Simulation.startTime, particle, ((particle.getvX()>0) ? new Wall(Wall.typeOfWall.RIGHT) : new Wall(Wall.typeOfWall.LEFT)));
         }
 
-        return new WallCollision(timeY, particle, ((particle.getvY()>0) ? new Wall(Wall.typeOfWall.BOTTOM) : new Wall(Wall.typeOfWall.TOP)));
+        return new WallCollision(timeY + Simulation.startTime, particle, ((particle.getvY()>0) ? new Wall(Wall.typeOfWall.BOTTOM) : new Wall(Wall.typeOfWall.TOP)));
 
     }
 
@@ -60,7 +61,7 @@ public class CollisionValidator {
             return null;
         time = -(dVdR + Math.sqrt(d)) / dV2;
         if(time > 0)
-            return new ParticleCollision(time, p1, p2);
+            return new ParticleCollision(time + Simulation.startTime, p1, p2);
         return null;
     }
 
