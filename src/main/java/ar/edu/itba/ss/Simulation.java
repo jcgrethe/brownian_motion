@@ -86,8 +86,8 @@ public class Simulation {
                 first.getvY() + Jy/first.getMass()
         );
         second.updateMotion(
-                second.getvX() + Jx/second.getMass(),
-                second.getvY() + Jy/second.getMass()
+                second.getvX() - Jx/second.getMass(),
+                second.getvY() - Jy/second.getMass()
         );
 
     }
