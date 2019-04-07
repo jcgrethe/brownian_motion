@@ -78,7 +78,7 @@ public class CollisionValidator {
             return ((WallCollision) another).getParticle() == ((ParticleCollision) one).getFirst() ||
                     ((WallCollision) another).getParticle() == ((ParticleCollision) one).getSecond();
         if (one instanceof WallCollision && another instanceof  WallCollision)
-            return ((WallCollision) another).getParticle() == ((WallCollision) another).getParticle();
+            return ((WallCollision) one).getParticle() == ((WallCollision) another).getParticle();
         return false;
     }
 }

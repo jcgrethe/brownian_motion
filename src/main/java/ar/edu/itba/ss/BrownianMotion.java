@@ -21,7 +21,7 @@ public final class BrownianMotion {
 
 
     public static void main(String[] args) {
-        Input input = new Input(Long.valueOf(100));
+        Input input = new Input(Long.valueOf(5));
         Output.generateXYZFile();
         try {
             // Save first state
