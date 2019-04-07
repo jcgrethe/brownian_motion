@@ -74,6 +74,7 @@ public class Input {
     }
 
     private boolean noOverlapParticle(Double x, Double y){
+        if (particles.size() == 0) return true;
         for (Particle particle : particles){
             if (Math.hypot(
                     Math.abs(x - particle.getX()),
