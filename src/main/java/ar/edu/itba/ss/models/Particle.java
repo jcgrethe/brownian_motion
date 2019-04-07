@@ -32,6 +32,8 @@ public class Particle {
         this.vY = vY;
         this.vModule = Math.hypot(vX, vY);
         this.vAngle = Math.atan(vY/vX);
+
+        this.collisionsCount++;
     }
 
     public void evolve(Double time){

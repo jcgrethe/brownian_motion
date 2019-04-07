@@ -75,12 +75,18 @@ public class Simulation {
         Particle first = particleCollision.getFirst();
         Particle second = particleCollision.getSecond();
 
-        Double sigma = first.getRadius() + second.getRadius(); //TODO: Re-Check if sigma is R1 + R2
-        Double J = (2*first.getMass()*second.getMass()*Math.abs(first.getvModule()-second.getvModule())*
-                Math.abs(first.getRadius() - second.getRadius()))/
+        Double sigma = first.getRadius() + second.getRadius();
+        Double dVX = first.getvX() - second.getvX();
+        Double dVY = first.getvY() - second.getvY();
+        Double dX = first.getX() - second.getX();
+        Double dY = first.getY() - second.getY();
+        Double dVdR = dVX*dX + dVY*dY;
+
+        Double J = (2*first.getMass()*second.getMass()*dVdR)/
                 ( sigma*(first.getMass() + second.getMass()));
-        Double Jx = J*Math.abs(first.getX()-second.getX())/sigma;
-        Double Jy = J*Math.abs(first.getY()-second.getY())/sigma;
+        Double Jx = J*dX/sigma;
+        Double Jy = J*dY/sigma;
+
         first.updateMotion(
                 first.getvX() + Jx/first.getMass(),
                 first.getvY() + Jy/first.getMass()
