@@ -1,6 +1,7 @@
 package ar.edu.itba.ss.collisions;
 
 import ar.edu.itba.ss.Simulation;
+import ar.edu.itba.ss.io.Input;
 import ar.edu.itba.ss.models.Particle;
 import ar.edu.itba.ss.models.Wall;
 
@@ -11,15 +12,32 @@ public class CollisionValidator {
         Double timeY= Double.POSITIVE_INFINITY;
         Double timeX = Double.POSITIVE_INFINITY;
 
+        double posY = Math.round(particle.getY() * 1000.0) / 1000.0;
+        double posX = Math.round(particle.getX() * 1000.0) / 1000.0;
+
+        if ( posX < particle.getRadius())
+            posX= particle.getRadius();
+
+        if ( posY < particle.getRadius())
+            posY= particle.getRadius();
+
+        if ( posX > Input.getSystemSideLength() - particle.getRadius())
+            posX = Input.getSystemSideLength() - particle.getRadius();
+
+        if ( posY > Input.getSystemSideLength() - particle.getRadius())
+            posY = Input.getSystemSideLength() - particle.getRadius();
+
+
+
         if (particle.getvY() >0)
-            timeY = ( size - particle.getY() - particle.getRadius() ) / particle.getvY();
+            timeY = ( size - posY - particle.getRadius() ) / particle.getvY();
         else if (particle.getvY() < 0)
-            timeY = ( particle.getY() - particle.getRadius() ) / Math.abs(particle.getvY());
+            timeY = ( posY - particle.getRadius() ) / Math.abs(particle.getvY());
 
         if (particle.getvX()>0)
-            timeX = ( size - particle.getX() - particle.getRadius() ) / particle.getvX();
+            timeX = ( size - posX - particle.getRadius() ) / particle.getvX();
         else if (particle.getvX() < 0)
-            timeX = ( 0 + particle.getX() - particle.getRadius() ) / Math.abs(particle.getvX());
+            timeX = ( posX - particle.getRadius() ) / Math.abs(particle.getvX());
 
         if(timeX < 0)
             timeX = Double.POSITIVE_INFINITY;
@@ -31,9 +49,16 @@ public class CollisionValidator {
             return null;
         }
 
+        // if time between x collision and y collision its almost equal its a corner collision
+        if ( Math.round(timeX * 10000000.0)  == Math.round(timeX * 10000000.0) ){
+            return new WallCollision(timeY  + Simulation.simulationCurrentTime, particle, new Wall(Wall.typeOfWall.CORNER));
+        }
+
         if(timeX < timeY){
             return new WallCollision(timeX + Simulation.simulationCurrentTime, particle, ((particle.getvX()>0) ? new Wall(Wall.typeOfWall.RIGHT) : new Wall(Wall.typeOfWall.LEFT)));
         }
+
+
 
         return new WallCollision(timeY  + Simulation.simulationCurrentTime, particle, ((particle.getvY()>0) ? new Wall(Wall.typeOfWall.BOTTOM) : new Wall(Wall.typeOfWall.TOP)));
 

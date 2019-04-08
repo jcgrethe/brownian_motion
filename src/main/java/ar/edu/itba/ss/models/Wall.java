@@ -2,7 +2,7 @@ package ar.edu.itba.ss.models;
 
 public class Wall {
     public enum typeOfWall{
-        TOP, BOTTOM, RIGHT, LEFT
+        TOP, BOTTOM, RIGHT, LEFT, CORNER
     }
 
 

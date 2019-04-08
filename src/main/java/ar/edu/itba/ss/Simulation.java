@@ -108,6 +108,9 @@ public class Simulation {
             case RIGHT:
                 wallCollision.getParticle().updateMotion(-wallCollision.getParticle().getvX(), wallCollision.getParticle().getvY());
                 break;
+            case CORNER:
+                wallCollision.getParticle().updateMotion(-wallCollision.getParticle().getvX(), -wallCollision.getParticle().getvY());
+                break;
             default: throw new IllegalStateException(); //This should not happen.
         }
     }
@@ -122,7 +125,7 @@ public class Simulation {
 
         particles.stream().forEach(
                 particle -> {
-                    particles.stream().forEach(
+                    this.input.getParticles().stream().forEach(
                             particle1 -> {
                                 Collision aux = CollisionValidator.particleCollision(particle, particle1);
                                 if (aux!=null)
