@@ -47,7 +47,8 @@ public class Simulation {
         //Determine new velocities
         getCollisions(input.getParticles());
         while(!collisions.isEmpty() || input.getTime() < startTime - (double)(System.currentTimeMillis()/1000)){
-            Collision nextCollision = collisions.pollFirst();
+            Collision nextCollision = collisions.first();
+            collisions.remove(nextCollision);
             evolveParticles(input.getParticles(), nextCollision.getTime() - simulationCurrentTime);
             if (nextCollision instanceof ParticleCollision){
                 collide((ParticleCollision) nextCollision);

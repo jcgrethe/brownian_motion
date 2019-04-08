@@ -58,8 +58,10 @@ public class Input {
             do{
                 x = random.nextDouble() * systemSideLength;
                 y = random.nextDouble() * systemSideLength;
-                vX = random.nextBoolean()?-1:1 * random.nextDouble() * maxVelocityModule;
-                vY = random.nextBoolean()?-1:1 * random.nextDouble() * maxVelocityModule;
+                vX = random.nextDouble() * maxVelocityModule;
+                vY = random.nextDouble() * maxVelocityModule;
+                vX = random.nextBoolean()?vX:-vX;
+                vY = random.nextBoolean()?vY:-vY;
             }while(noOverlapParticle(x,y) && Math.hypot(vX, vY) < maxVelocityModule);
             this.particles.add(new Particle(
                     x,
