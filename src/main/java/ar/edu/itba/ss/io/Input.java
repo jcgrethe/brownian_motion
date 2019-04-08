@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.DoubleBuffer;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Input {
 
@@ -56,13 +57,13 @@ public class Input {
         for (int p = 0 ; p < smallParticlesQuantity ; p++ ){
             Double x,y,vX,vY;
             do{
-                x = random.nextDouble() * (systemSideLength - smallParticleRadio);
-                y = random.nextDouble() * (systemSideLength - smallParticleRadio);
+                x =  ThreadLocalRandom.current().nextDouble(smallParticleRadio, systemSideLength-smallParticleRadio);;
+                y =  ThreadLocalRandom.current().nextDouble(smallParticleRadio, systemSideLength-smallParticleRadio);;
                 vX = random.nextDouble() * maxVelocityModule;
                 vY = random.nextDouble() * maxVelocityModule;
                 vX = random.nextBoolean()?vX:-vX;
                 vY = random.nextBoolean()?vY:-vY;
-            }while(noOverlapParticle(x,y) && Math.hypot(vX, vY) < maxVelocityModule);
+            }while(!noOverlapParticle(x,y) || Math.hypot(vX, vY) > maxVelocityModule);
             this.particles.add(new Particle(
                     x,
                     y,
@@ -78,11 +79,8 @@ public class Input {
     private boolean noOverlapParticle(Double x, Double y){
         if (particles.size() == 0) return true;
         for (Particle particle : particles){
-            if (Math.hypot(
-                    Math.abs(x - particle.getX()),
-                    Math.abs(y - particle.getY())
-                ) - particle.getMass() - smallParticleMass <= 0){
-                return false;
+                if ( (Math.pow(particle.getX() - x, 2) + Math.pow(particle.getY() - y, 2)) <= Math.pow(particle.getRadius() + smallParticleRadio, 2)){
+                    return false;
             }
         }
         return true;
