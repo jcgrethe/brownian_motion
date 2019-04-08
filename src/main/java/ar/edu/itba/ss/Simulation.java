@@ -117,6 +117,27 @@ public class Simulation {
     private void getCollisions(List<Particle> particles){
         particles.stream().forEach(
                 particle -> {
+                    Collision aux = CollisionValidator.wallCollision(particle,this.size);
+                    if (aux!=null)
+                        collisions.add(aux);
+                });
+
+        particles.stream().forEach(
+                particle -> {
+                    this.input.getParticles().stream().forEach(
+                            particle1 -> {
+                                Collision aux = CollisionValidator.particleCollision(particle, particle1);
+                                if (aux!=null)
+                                    collisions.add(aux);
+                            }
+                    );
+                }
+        );
+    }
+
+    private void getCollisions(List<Particle> particles, ParticleCollision c){
+        particles.stream().forEach(
+                particle -> {
             Collision aux = CollisionValidator.wallCollision(particle,this.size);
             if (aux!=null)
                 collisions.add(aux);
@@ -126,8 +147,8 @@ public class Simulation {
                 particle -> {
                     this.input.getParticles().stream().forEach(
                             particle1 -> {
-                                Collision aux = CollisionValidator.particleCollision(particle, particle1);
-                                if (aux!=null)
+                                ParticleCollision aux = (ParticleCollision) CollisionValidator.particleCollision(particle, particle1);
+                                if (aux!=null && aux!= c )
                                     collisions.add(aux);
                             }
                     );
@@ -149,7 +170,10 @@ public class Simulation {
             }
         });
         collisions = collisions.stream().filter(collision -> !CollisionValidator.hasCommonParticles(currentCollision, collision)).collect(Collectors.toCollection(supplier));
-        getCollisions(currentCollisionParticles);
+        if (currentCollision instanceof ParticleCollision)
+            getCollisions(currentCollisionParticles, (ParticleCollision) currentCollision);
+        else
+            getCollisions(currentCollisionParticles);
     }
 
 }

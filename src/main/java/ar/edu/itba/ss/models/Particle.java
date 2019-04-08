@@ -74,7 +74,7 @@ public class Particle {
     }
 
     public double getMass() {
-        return mass;
+        return mass*1000;
     }
 
     public int getCollisionsCount() {
