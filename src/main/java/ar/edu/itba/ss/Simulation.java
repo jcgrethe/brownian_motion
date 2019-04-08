@@ -46,7 +46,8 @@ public class Simulation {
         //Save Tc state
         //Determine new velocities
         getCollisions(input.getParticles());
-        while(!collisions.isEmpty() || input.getTime() < startTime - (double)(System.currentTimeMillis()/1000)){
+        System.out.println("Starting Simulation");
+        while(!collisions.isEmpty() && simulationCurrentTime < Input.getTime() ){
             Collision nextCollision = collisions.first();
             collisions.remove(nextCollision);
             evolveParticles(input.getParticles(), nextCollision.getTime() - simulationCurrentTime);
@@ -56,7 +57,6 @@ public class Simulation {
                 collide((WallCollision) nextCollision);
             }
             simulationCurrentTime = nextCollision.getTime();
-            System.out.println(nextCollision.getTime());
             updateCollisions(nextCollision);
             try{
                 Output.printToFile(input.getParticles());
@@ -64,6 +64,8 @@ public class Simulation {
                 System.out.println(e);
             }
         }
+        System.out.println("Simulation Finished");
+
     }
 
     private void evolveParticles(List<Particle> particles, Double time){
