@@ -56,10 +56,10 @@ public class Simulation {
                 collide((WallCollision) nextCollision);
             }
             simulationCurrentTime = nextCollision.getTime();
+            System.out.println(nextCollision.getTime());
             updateCollisions(nextCollision);
             try{
                 Output.printToFile(input.getParticles());
-                System.out.println(nextCollision.getTime());
             }catch (IOException e){
                 System.out.println(e);
             }
@@ -76,17 +76,16 @@ public class Simulation {
         Particle first = particleCollision.getFirst();
         Particle second = particleCollision.getSecond();
 
-        Double sigma = first.getRadius() + second.getRadius();
-        Double dVX = first.getvX() - second.getvX();
-        Double dVY = first.getvY() - second.getvY();
-        Double dX = first.getX() - second.getX();
-        Double dY = first.getY() - second.getY();
+        Double dX = second.getX() - first.getX();
+        Double dY = second.getY() - first.getY();
+        Double dVX = second.getvX() - first.getvX();
+        Double dVY = second.getvY() - first.getvY();
         Double dVdR = dVX*dX + dVY*dY;
+        Double sigma = first.getRadius() + second.getRadius();
 
-        Double J = (2*first.getMass()*second.getMass()*dVdR)/
-                ( sigma*(first.getMass() + second.getMass()));
-        Double Jx = J*dX/sigma;
-        Double Jy = J*dY/sigma;
+        Double J = (2*first.getMass()*second.getMass()*dVdR) / (sigma*(first.getMass() + second.getMass()));
+        Double Jx = (J*dX) / sigma;
+        Double Jy = (J*dY) / sigma;
 
         first.updateMotion(
                 first.getvX() + Jx/first.getMass(),
@@ -96,7 +95,6 @@ public class Simulation {
                 second.getvX() - Jx/second.getMass(),
                 second.getvY() - Jy/second.getMass()
         );
-
     }
     private void collide(WallCollision wallCollision){
         switch (wallCollision.getWall().getTypeOfWall()){
