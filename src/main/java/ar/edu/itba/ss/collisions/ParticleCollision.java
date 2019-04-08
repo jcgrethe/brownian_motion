@@ -34,4 +34,20 @@ public class ParticleCollision extends Collision {
         }
         return false;
     }
+
+    public boolean sameCollision(Object obj) {
+        if (obj instanceof ParticleCollision){
+            ParticleCollision other = (ParticleCollision) obj;
+            if (
+                    (getFirst() == other.getFirst() && getSecond() == other.getSecond() )
+                            ||  (getFirst() == other.getSecond() && getSecond() == other.getFirst() )
+                    )
+                return true;
+            else
+                return false;
+        }
+        return false;
+    }
+
+
 }

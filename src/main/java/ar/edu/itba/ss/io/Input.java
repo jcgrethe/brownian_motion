@@ -56,8 +56,8 @@ public class Input {
         for (int p = 0 ; p < smallParticlesQuantity ; p++ ){
             Double x,y,vX,vY;
             do{
-                x = random.nextDouble() * systemSideLength;
-                y = random.nextDouble() * systemSideLength;
+                x = random.nextDouble() * (systemSideLength - smallParticleRadio);
+                y = random.nextDouble() * (systemSideLength - smallParticleRadio);
                 vX = random.nextDouble() * maxVelocityModule;
                 vY = random.nextDouble() * maxVelocityModule;
                 vX = random.nextBoolean()?vX:-vX;

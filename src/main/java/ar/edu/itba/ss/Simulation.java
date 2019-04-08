@@ -149,7 +149,7 @@ public class Simulation {
                     this.input.getParticles().stream().forEach(
                             particle1 -> {
                                 ParticleCollision aux = (ParticleCollision) CollisionValidator.particleCollision(particle, particle1);
-                                if (aux!=null && aux!= c )
+                                if (aux!=null && !aux.sameCollision(c) )
                                     collisions.add(aux);
                             }
                     );
