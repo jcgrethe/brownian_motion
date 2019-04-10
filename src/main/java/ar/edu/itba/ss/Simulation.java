@@ -62,7 +62,7 @@ public class Simulation {
 
 
         while(!collisions.isEmpty() && simulationCurrentTime < Input.getTime() ){
-
+            pos.add(new Pair<>(this.input.getParticles().get(0).getX(),this.input.getParticles().get(0).getY()));
             Collision nextCollision = collisions.first();
             collisions.remove(nextCollision);
             evolveParticles(input.getParticles(), nextCollision.getTime() - simulationCurrentTime);
@@ -78,9 +78,9 @@ public class Simulation {
             }
             simulationCurrentTime = nextCollision.getTime();
             updateCollisions(nextCollision);
-            if (Math.floor(collisionCounter%input.getFramesFactor()*150)==0){
+            if (Math.floor(collisionCounter%input.getFramesFactor())==0){
                 try{
-                    pos.add(new Pair<>(this.input.getParticles().get(0).getX(),this.input.getParticles().get(0).getY()));
+
                     Output.printToFile(input.getParticles());
                 }catch (IOException e){
                     System.out.println(e);
@@ -88,15 +88,31 @@ public class Simulation {
             }
             collisionCounter++;
         }
+
         System.out.println("Simulation Finished");
         Output.generateStatistics(collisionsPerUnitOfTime);
-        Output.generateStatisticBigParticlePos(pos,temp,(sumkinetic/input.getParticles().size())/2);
+        Output.generateStatisticBigParticlePos(trimPos(pos),temp,(sumkinetic/input.getParticles().size())/2);
 
     }
 
     private void evolveParticles(List<Particle> particles, Double time){
         particles.stream().forEach(particle -> particle.evolve(time));
     }
+
+    private List<Pair <Double,Double>> trimPos(List<Pair <Double,Double>> pos){
+        int size = pos.size();
+        int trimFactor = (size / 300 == 0)? 1 : (size / 300);
+
+        List<Pair <Double,Double>> aux = new LinkedList<>();
+        int count = 0;
+        for(Pair p : pos){
+            if(count % trimFactor == 0)
+                aux.add(p);
+            count++;
+        }
+        return aux;
+    }
+
 
     private void collide(ParticleCollision particleCollision){
         // Different Mass - Elastic Collision
