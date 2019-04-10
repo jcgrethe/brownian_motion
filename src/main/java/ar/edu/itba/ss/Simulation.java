@@ -25,12 +25,14 @@ public class Simulation {
     public static Double startTime = (double)(System.currentTimeMillis()/1000);
     public static Double simulationCurrentTime = 0.0;
     private TreeSet<Collision> collisions;
+    private Map<Integer,Integer> collisionsPerUnitOfTime;
 
     public Simulation(double size, double time, double dt, Input input) {
         this.size = Input.getSystemSideLength();
         this.time = time;
         this.dt = dt;
         this.input = input;
+        this.collisionsPerUnitOfTime  = new HashMap<>();
         this.collisions = new TreeSet<>(new Comparator<Collision>() {
             @Override
             public int compare(Collision o1, Collision o2) {
@@ -56,6 +58,11 @@ public class Simulation {
             }else if (nextCollision instanceof WallCollision){
                 collide((WallCollision) nextCollision);
             }
+            if (collisionsPerUnitOfTime.get((int)Math.floor(simulationCurrentTime)) == null){
+                collisionsPerUnitOfTime.put((int)Math.floor(simulationCurrentTime),1);
+            }else{
+                collisionsPerUnitOfTime.put((int)Math.floor(simulationCurrentTime),collisionsPerUnitOfTime.get((int)Math.floor(simulationCurrentTime))+1);
+            }
             simulationCurrentTime = nextCollision.getTime();
             updateCollisions(nextCollision);
             try{
@@ -65,6 +72,7 @@ public class Simulation {
             }
         }
         System.out.println("Simulation Finished");
+        Output.generateStatistics(collisionsPerUnitOfTime);
 
     }
 

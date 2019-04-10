@@ -5,12 +5,15 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class Output {
     private final static String FILENAME = "output.txt";
     private final static String SIMULATION_FILENAME = "positions.xyz";
     private final static String STATIC_FILENAME = "sample_input_static.txt";
     private final static String DINAMIC_FILENAME = "sample_input_dinamic.txt";
+    private final static String STATISTICS_FILENAME = "statistics.csv";
+
     private static BufferedWriter simulationBufferedWriter;
 
 
@@ -40,6 +43,31 @@ public class Output {
         try{
             FileWriter fileWriter = new FileWriter(SIMULATION_FILENAME);
             simulationBufferedWriter = new BufferedWriter(fileWriter);
+        }catch(IOException e){
+            System.out.println(e);
+        }
+    }
+
+    public static void generateStatistics(Map<Integer, Integer> collisionsPerUnitOfTime){
+        try{
+            FileWriter statisticsFileWriter = new FileWriter(STATISTICS_FILENAME);
+            BufferedWriter statisticsBuffererWriter = new BufferedWriter(statisticsFileWriter);
+
+            statisticsBuffererWriter.write(
+                    "time,collisions"
+            );
+            collisionsPerUnitOfTime.entrySet().forEach(entry -> {
+                try{
+                    statisticsBuffererWriter.write(
+                            entry.getKey() + "," + entry.getValue()
+                            );
+                    statisticsBuffererWriter.newLine();
+                }catch (IOException e){
+                    System.out.println(e);
+                }
+            });
+            statisticsBuffererWriter.flush();
+
         }catch(IOException e){
             System.out.println(e);
         }
