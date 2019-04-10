@@ -1,5 +1,6 @@
 package ar.edu.itba.ss.io;
 import ar.edu.itba.ss.models.Particle;
+import javafx.util.Pair;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -13,7 +14,7 @@ public class Output {
     private final static String STATIC_FILENAME = "sample_input_static.txt";
     private final static String DINAMIC_FILENAME = "sample_input_dinamic.txt";
     private final static String STATISTICS_FILENAME = "statistics.csv";
-
+    private final static String TRAJECTORY_FILENAME = "trajectory.csv";
     private static BufferedWriter simulationBufferedWriter;
 
 
@@ -57,21 +58,63 @@ public class Output {
                     "time,collisions"
             );
             statisticsBuffererWriter.newLine();
-            collisionsPerUnitOfTime.entrySet().forEach(entry -> {
-                try{
-                    statisticsBuffererWriter.write(
-                            entry.getKey() + "," + entry.getValue()
-                            );
-                    statisticsBuffererWriter.newLine();
-                }catch (IOException e){
-                    System.out.println(e);
-                }
-            });
-            statisticsBuffererWriter.flush();
+            printStadistics(collisionsPerUnitOfTime,statisticsBuffererWriter);
 
         }catch(IOException e){
             System.out.println(e);
         }
+    }
+
+    public static void generateStatisticBigParticlePos(List<Pair<Double,Double>> xy,double temp, double kinetic){
+        try{
+            FileWriter statisticsFileWriter = new FileWriter(TRAJECTORY_FILENAME);
+            BufferedWriter statisticsBuffererWriter = new BufferedWriter(statisticsFileWriter);
+
+            statisticsBuffererWriter.write(
+                    "x,y,,,,,,,temperature:,"+ temp+",kinetic:," + kinetic
+            );
+
+            statisticsBuffererWriter.newLine();
+            printStadistics(xy,statisticsBuffererWriter);
+
+        }catch(IOException e){
+            System.out.println(e);
+        }
+    }
+
+    private static void printStadistics(Map<Integer,Integer> xy,BufferedWriter statisticsBuffererWriter) throws IOException {
+        xy.entrySet().forEach(entry -> {
+            try{
+                statisticsBuffererWriter.write(
+                        entry.getKey() + "," + entry.getValue()
+                );
+                statisticsBuffererWriter.newLine();
+            }catch (IOException e){
+                System.out.println(e);
+            }
+        });
+        statisticsBuffererWriter.flush();
+    }
+
+
+    private static void printStadistics(List<Pair<Double,Double>> xy,BufferedWriter statisticsBuffererWriter) throws IOException {
+
+        xy.forEach(doubleDoublePair -> {
+            try {
+                statisticsBuffererWriter.write(
+                        doubleDoublePair.getKey() + "," + doubleDoublePair.getValue()
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                statisticsBuffererWriter.newLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        statisticsBuffererWriter.flush();
     }
 
     public static void generateInputFiles(Long totalParticlesQuantity, int sideLength, List<Particle> particles){

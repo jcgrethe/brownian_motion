@@ -8,6 +8,8 @@ import ar.edu.itba.ss.io.Input;
 import ar.edu.itba.ss.io.Output;
 import ar.edu.itba.ss.models.Particle;
 import ar.edu.itba.ss.models.Wall;
+import javafx.util.Pair;
+import org.jscience.physics.amount.Constants;
 
 import java.io.IOException;
 import java.util.*;
@@ -43,14 +45,24 @@ public class Simulation {
     }
 
 
-    public void start(){
+    public void start() {
         //Calculate time (Tc) to next collision
         //Evolve particles to Tc
         //Save Tc state
         //Determine new velocities
         getCollisions(input.getParticles());
         System.out.println("Starting Simulation");
+        List<Pair <Double,Double>> pos = new LinkedList<>();
+        double  sumkinetic= 0;
+        for (Particle particle: input.getParticles()){
+            sumkinetic+= particle.getMass()*Math.pow(particle.getvModule(),2);
+        }
+        double k = Constants.k.getEstimatedValue();
+        double temp = (sumkinetic / input.getParticles().size()) / ( 3.0 * k);
+
+
         while(!collisions.isEmpty() && simulationCurrentTime < Input.getTime() ){
+
             Collision nextCollision = collisions.first();
             collisions.remove(nextCollision);
             evolveParticles(input.getParticles(), nextCollision.getTime() - simulationCurrentTime);
@@ -66,8 +78,9 @@ public class Simulation {
             }
             simulationCurrentTime = nextCollision.getTime();
             updateCollisions(nextCollision);
-            if (Math.floor(collisionCounter%input.getFramesFactor())==0){
+            if (Math.floor(collisionCounter%input.getFramesFactor()*150)==0){
                 try{
+                    pos.add(new Pair<>(this.input.getParticles().get(0).getX(),this.input.getParticles().get(0).getY()));
                     Output.printToFile(input.getParticles());
                 }catch (IOException e){
                     System.out.println(e);
@@ -77,6 +90,7 @@ public class Simulation {
         }
         System.out.println("Simulation Finished");
         Output.generateStatistics(collisionsPerUnitOfTime);
+        Output.generateStatisticBigParticlePos(pos,temp,(sumkinetic/input.getParticles().size())/2);
 
     }
 
