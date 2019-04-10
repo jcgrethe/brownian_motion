@@ -56,6 +56,7 @@ public class Output {
             statisticsBuffererWriter.write(
                     "time,collisions"
             );
+            statisticsBuffererWriter.newLine();
             collisionsPerUnitOfTime.entrySet().forEach(entry -> {
                 try{
                     statisticsBuffererWriter.write(
