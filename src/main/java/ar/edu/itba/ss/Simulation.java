@@ -26,6 +26,7 @@ public class Simulation {
     public static Double simulationCurrentTime = 0.0;
     private TreeSet<Collision> collisions;
     private Map<Integer,Integer> collisionsPerUnitOfTime;
+    private static Integer collisionCounter = 0;
 
     public Simulation(double size, double time, double dt, Input input) {
         this.size = Input.getSystemSideLength();
@@ -65,11 +66,14 @@ public class Simulation {
             }
             simulationCurrentTime = nextCollision.getTime();
             updateCollisions(nextCollision);
-            try{
-                Output.printToFile(input.getParticles());
-            }catch (IOException e){
-                System.out.println(e);
+            if (Math.floor(collisionCounter%input.getFramesFactor())==0){
+                try{
+                    Output.printToFile(input.getParticles());
+                }catch (IOException e){
+                    System.out.println(e);
+                }
             }
+            collisionCounter++;
         }
         System.out.println("Simulation Finished");
         Output.generateStatistics(collisionsPerUnitOfTime);

@@ -20,7 +20,8 @@ public class Input {
     private static final Double bigParticleRadio = 0.05;
     private static final Double smallParticleMass = 0.0001;
     private static final Double bigParticleMass = 0.1;
-
+    private static final int FRAMES_PER_SECOND = 15;
+    private static Double framesFactor;
 
     // Defined values
 //    private static int defaultIterations = 1000;
@@ -73,6 +74,8 @@ public class Input {
                     smallParticleMass
             ));
         }
+        Double averageFramesPerSecond = 3*Math.exp(-6*Math.pow(smallParticlesQuantity,3)) + 0.0041*Math.pow(smallParticlesQuantity,2) + 0.1057*smallParticlesQuantity + 2.0049;
+        this.framesFactor = averageFramesPerSecond / FRAMES_PER_SECOND;
         System.out.println("Done.]");
     }
 
@@ -150,5 +153,9 @@ public class Input {
 
     public static Double getDT() {
         return dt;
+    }
+
+    public static Double getFramesFactor() {
+        return framesFactor;
     }
 }
