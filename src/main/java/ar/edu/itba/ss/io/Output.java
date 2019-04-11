@@ -12,7 +12,9 @@ public class Output {
     private final static String SIMULATION_FILENAME = "positions.xyz";
     private final static String STATIC_FILENAME = "sample_input_static.txt";
     private final static String DINAMIC_FILENAME = "sample_input_dinamic.txt";
-    private final static String STATISTICS_FILENAME = "statistics.csv";
+    private final static String STATISTICS_FILENAME = "statistics_collisions_per_unit_of_time.csv";
+    public final static String STATISTICS_V_0_FILENAME = "statistics_v_0.csv";
+    public final static String STATISTICS_V_F_FILENAME = "statistics_v_f.csv";
 
     private static BufferedWriter simulationBufferedWriter;
 
@@ -48,7 +50,7 @@ public class Output {
         }
     }
 
-    public static void generateStatistics(Map<Integer, Integer> collisionsPerUnitOfTime){
+    public static void generateCollisionsStatistics(Map<Integer, Integer> collisionsPerUnitOfTime){
         try{
             FileWriter statisticsFileWriter = new FileWriter(STATISTICS_FILENAME);
             BufferedWriter statisticsBuffererWriter = new BufferedWriter(statisticsFileWriter);
@@ -73,6 +75,31 @@ public class Output {
             System.out.println(e);
         }
     }
+
+    public static void generateVelocitiesFile(String filename, List<Particle> particles){
+        try{
+            FileWriter statisticsFileWriter = new FileWriter(filename);
+            BufferedWriter statisticsBuffererWriter = new BufferedWriter(statisticsFileWriter);
+
+            statisticsBuffererWriter.write(
+                    "particle,velocity"
+            );
+            statisticsBuffererWriter.newLine();
+            particles.forEach(particle -> {try{
+                statisticsBuffererWriter.write(
+                        particle.getId() + "," + particle.getvModule()
+                );
+                statisticsBuffererWriter.newLine();
+            }catch (IOException e){
+                System.out.println(e);
+            }});
+            statisticsBuffererWriter.flush();
+
+        }catch(IOException e){
+            System.out.println(e);
+        }
+    }
+
 
     public static void generateInputFiles(Long totalParticlesQuantity, int sideLength, List<Particle> particles){
         try{
