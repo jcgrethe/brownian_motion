@@ -76,7 +76,7 @@ public class Simulation {
             collisionCounter++;
         }
         System.out.println("Simulation Finished");
-        Output.generateStatistics(collisionsPerUnitOfTime);
+        Output.generateCollisionsStatistics(collisionsPerUnitOfTime);
 
     }
 
